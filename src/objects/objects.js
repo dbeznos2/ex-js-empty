@@ -10,7 +10,10 @@
  * The values of the properties should be "Toto", "Tutu"
  */
 export function crateUserObject() {
-  //
+    return {
+        first_name: "Toto",
+        last_name: "Tutu"
+    }
 }
 
 /**
@@ -19,7 +22,7 @@ export function crateUserObject() {
  * @return string a concatenation of the first and last name, separated with a space
  */
 export function accessPropertiesInObjects(object) {
-  //
+  return object.first_name + " " + object.last_name;
 }
 
 /**
@@ -30,7 +33,21 @@ export function accessPropertiesInObjects(object) {
  * and all original object values mapped to lower case
  */
 export function iteratesThroughObjectValuesAndProperties(object) {
-  //
+  const results = {
+      keys: [],
+      values: [],
+  };
+
+    for (const key in object) {
+        if (object.hasOwnProperty(key)) {
+            const uppercaseKey = key.toUpperCase();
+            const lowercaseValue = object[key].toLowerCase();
+
+            results.keys.push(uppercaseKey);
+            results.values.push(lowercaseValue);
+        }
+    }
+    return results;
 }
 
 /**
@@ -39,8 +56,17 @@ export function iteratesThroughObjectValuesAndProperties(object) {
  * @return {{younger: string, older: string}}
  */
 export function retrieveMaximumMinimumUserAges(users) {
-  //
+    if (!Array.isArray(users) || users.length === 0) {
+        return null;
+    }
+    const sortedUsers = [...users].sort((a, b) => a.age - b.age);
+
+    return {
+        younger: sortedUsers[0].name,
+        older: sortedUsers[sortedUsers.length - 1].name,
+    };
 }
+
 
 /**
  * In javascript, objects can be represented as string, this is JSON
@@ -49,13 +75,23 @@ export function retrieveMaximumMinimumUserAges(users) {
  * @return {Object} An object retried by parsing the string
  */
 export function parseJavaScriptObjectNotation(string) {
-  //
+    try {
+        return JSON.parse(string);
+    } catch (error) {
+        console.error("Error parsing JSON:", error.message);
+        return null;
+    }
 }
 
 /**
  * @param {Object} object
- * @return {string} An string representing the given object
+ * @return {string} A string representing the given object
  */
 export function stringifyJavaScriptObjectNotation(object) {
-  //
+    try {
+        return JSON.stringify(object);
+    } catch (error) {
+        console.error("Error stringifying object:", error.message);
+        return "";
+    }
 }
