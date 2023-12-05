@@ -13,7 +13,10 @@
  * @return {boolean} true if n is bigger than 2
  */
 export function isBiggerThan2(n) {
-  //
+    if (typeof n !== 'number' || isNaN(n)) {
+        throw new Error('Input must be a valid number');
+    }
+    return n > 2;
 }
 
 /**
@@ -22,5 +25,8 @@ export function isBiggerThan2(n) {
  * @return {boolean} true if m is a multiple of n
  */
 export function isMult(n, m) {
-  //
+    if (typeof n !==  'number' || typeof   m !== 'number' || isNaN(n) || isNaN(m)) {
+        throw new Error('Must be valid number');
+    }
+    return n % m === 0;
 }
