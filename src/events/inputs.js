@@ -4,7 +4,17 @@
  * If input his empty, you should not trigger the alert
  */
 export function displayInputContentInAlertOnEnterKey() {
-  //
+    let textAlert = document.getElementById('write-some-text');
+    if (textAlert) {
+        textAlert.addEventListener('keydown', function (event) {
+            if (event.key === 'Enter') {
+                const inputValue = textAlert.value.trim();
+                if (inputValue !== '') {
+                    alert(inputValue);
+                }
+            }
+        });
+    }
 }
 
 /**
@@ -13,13 +23,56 @@ export function displayInputContentInAlertOnEnterKey() {
  * the text should be added to a list of elements with id "list".
  */
 export function addElementsInListOnEnterKey() {
-  //
+    let listInput = document.getElementById('list-input');
+    let list = document.getElementById('list');
+
+    if (listInput && list) {
+        listInput.addEventListener('keydown', function (event) {
+            if (event.key === 'Enter') {
+                addElementToList();
+            }
+        });
+
+        listInput.addEventListener('blur', function () {
+            addElementToList();
+        });
+    }
+
+    function addElementToList() {
+        let inputValue = listInput.value.trim();
+
+        if (inputValue !== '') {
+            // Create a new list item
+            let listItem = document.createElement('li');
+            listItem.textContent = inputValue;
+
+            // Append the new item to the list
+            list.appendChild(listItem);
+
+            // Clear the input field
+            listInput.value = '';
+        }
+    }
 }
+
 
 /**
  * Add functionalities to the list. Now, when you click on one of the li, the element should be removed.
  * Use the same list as the previous exercise. "#list"
  */
 export function removeElementsFromListWhenClicked() {
-  //
+    let list = document.getElementById('list');
+
+    if (list) {
+        // Attach the event listener to the list and use event delegation
+        list.addEventListener('click', function (event) {
+            if (event.target.tagName === 'LI') {
+                // If a list item is clicked, remove it
+                event.target.remove();
+            }
+        });
+    } else {
+        console.error('List element not found.');
+    }
 }
+

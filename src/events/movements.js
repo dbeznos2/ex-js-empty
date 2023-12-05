@@ -4,7 +4,16 @@
  * You need to display coordinates as follows : "x: 232, y: 332
  */
 export function mouseMovements() {
-  //
+    let coordinatesElement = document.getElementById("mouse-coordinates");
+
+    document.addEventListener("mousemove", (event) => {
+        const mouseX = event.clientX;
+        const mouseY = event.clientY;
+
+        const coordinatesText = `x: ${mouseX}, y: ${mouseY}`;
+
+        coordinatesElement.textContent = coordinatesText;
+    });
 }
 
 /**
@@ -17,8 +26,58 @@ export function mouseMovements() {
  * Third, when you loose focus of the field, you need to reset the border color to the default one.
  */
 export function hoverFocusAndBlur() {
-  //
+    const inputElement = document.getElementById("focus-me");
+    const labelElement = document.querySelector('label[for="focus-me"]');
+    let originalBorderColor; // Store the original border color
+    let usedColors = []; // Keep track of used colors
+
+    // Hover behavior
+    inputElement.addEventListener("mouseover", () => {
+        labelElement.textContent = "Yes, you hover me!";
+    });
+
+    inputElement.addEventListener("mouseout", () => {
+        labelElement.textContent = "";
+    });
+
+    // Focus behavior
+    inputElement.addEventListener("focus", () => {
+        // Introduce a slight delay before changing the border color
+        setTimeout(() => {
+            // Generate a random color different from the original and previously used colors
+            const randomColor = generateRandomColor();
+            originalBorderColor = inputElement.style.borderColor; // Store the original color
+            inputElement.style.borderColor = randomColor;
+            usedColors.push(randomColor);
+        }, 100); // Adjust the delay as needed
+    });
+
+    // Blur behavior
+    inputElement.addEventListener("blur", () => {
+        // Reset the border color to the original one
+        inputElement.style.borderColor = originalBorderColor;
+    });
+
+    // Function to generate a random color
+    function generateRandomColor() {
+        let color;
+        do {
+            color = getRandomColor();
+        } while (usedColors.includes(color) || color === originalBorderColor);
+        return color;
+    }
+
+    // Function to generate a random hexadecimal color
+    function getRandomColor() {
+        const letters = "0123456789ABCDEF";
+        let color = "#";
+        for (let i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    }
 }
+
 
 /**
  * On the same input from the previous exercise, you need to add a new behavior :
@@ -29,5 +88,7 @@ export function hoverFocusAndBlur() {
  * Take the opportunity to also apply this colour to the text of the 2 input labels.
  */
 export function changesOnInputEvents() {
-  //
+   
 }
+
+
