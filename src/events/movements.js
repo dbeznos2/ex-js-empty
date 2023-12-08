@@ -25,58 +25,87 @@ export function mouseMovements() {
  *         but different from all the previously used and different from the original one.
  * Third, when you loose focus of the field, you need to reset the border color to the default one.
  */
+// Get the input element with the ID "focus-me"
+const input = document.getElementById("focus-me");
+
+// Store the original border color of the input
+let originalColor = input.style.borderColor;
+
+// Function to handle hover, focus, and blur events
 export function hoverFocusAndBlur() {
-    const inputElement = document.getElementById("focus-me");
-    const labelElement = document.querySelector('label[for="focus-me"]');
-    let originalBorderColor; // Store the original border color
-    let usedColors = []; // Keep track of used colors
+    // Select all labels associated with the input
+    const labels = document.querySelectorAll("label[for='focus-me']");
 
-    // Hover behavior
-    inputElement.addEventListener("mouseover", () => {
-        labelElement.textContent = "Yes, you hover me!";
-    });
+    // Store the original text content of the labels
+    const originalLabels = Array.from(labels, (label) => label.textContent);
 
-    inputElement.addEventListener("mouseout", () => {
-        labelElement.textContent = "";
-    });
+    // Keep track of used colors to avoid duplicates
+    const usedColors = [originalColor];
 
-    // Focus behavior
-    inputElement.addEventListener("focus", () => {
-        // Introduce a slight delay before changing the border color
-        setTimeout(() => {
-            // Generate a random color different from the original and previously used colors
-            const randomColor = generateRandomColor();
-            originalBorderColor = inputElement.style.borderColor; // Store the original color
-            inputElement.style.borderColor = randomColor;
-            usedColors.push(randomColor);
-        }, 100); // Adjust the delay as needed
-    });
-
-    // Blur behavior
-    inputElement.addEventListener("blur", () => {
-        // Reset the border color to the original one
-        inputElement.style.borderColor = originalBorderColor;
-    });
-
-    // Function to generate a random color
-    function generateRandomColor() {
-        let color;
-        do {
-            color = getRandomColor();
-        } while (usedColors.includes(color) || color === originalBorderColor);
-        return color;
-    }
-
-    // Function to generate a random hexadecimal color
-    function getRandomColor() {
-        const letters = "0123456789ABCDEF";
-        let color = "#";
-        for (let i = 0; i < 6; i++) {
-            color += letters[Math.floor(Math.random() * 16)];
+    // Event listener for mouseout (when not in focus)
+    input.addEventListener("mouseout", () => {
+        // Check if the input is not in focus
+        if (!input.matches(":focus")) {
+            // Restore the original text content to labels
+            input.labels.forEach((label, i) => {
+                label.textContent = originalLabels[i];
+            });
         }
-        return color;
-    }
+    });
+
+    // Event listener for mouseover (when hovered)
+    input.addEventListener("mouseover", () => {
+        // Update the text content of labels when hovered
+        input.labels.forEach((label) => {
+            label.textContent = "Yes, you hover me!";
+        });
+    });
+
+    // Additional event listener for mouseout (when hover is lost)
+    input.addEventListener("mouseout", () => {
+        // Check if the input is not in focus
+        if (!input.matches(":focus")) {
+            // Restore the original text content to labels
+            input.labels.forEach((label, i) => {
+                label.textContent = originalLabels[i];
+            });
+        }
+    });
+
+    // Event listener for focus (when the input is in focus)
+    input.addEventListener("focus", () => {
+        // Generate a new border color until it's different from the original color
+        let newBorderColor;
+        do {
+            newBorderColor = getRandomColor();
+        } while (usedColors.includes(newBorderColor));
+
+        // Update the input border color
+        input.style.borderColor = newBorderColor;
+
+        // Store the new color in the used colors array
+        usedColors.push(newBorderColor);
+    });
+
+    // Event listener for blur (when the input loses focus)
+    input.addEventListener("blur", () => {
+        // If there is no text inside the input field, reset border color to default
+        if (!input.value.trim()) {
+            input.style.borderColor = originalColor;
+        }
+    });
 }
+
+// Function to generate a random RGB color
+function getRandomColor() {
+    let x = Math.floor(Math.random() * 256);
+    let y = Math.floor(Math.random() * 256);
+    let z = Math.floor(Math.random() * 256);
+
+    return `rgb(${x},${y},${z})`;
+}
+
+
 
 
 /**
@@ -88,7 +117,39 @@ export function hoverFocusAndBlur() {
  * Take the opportunity to also apply this colour to the text of the 2 input labels.
  */
 export function changesOnInputEvents() {
-   
+    const input = document.getElementById("focus-me");
+
+    input.addEventListener("input", () => {
+        // Generate a new random color for each input event
+        const newColor = getRandomColor();
+
+        // Change the originalColor variable with the new color
+        originalColor = newColor;
+
+        // Change the border color of the input element to the new color
+        input.style.borderColor = newColor;
+
+        // Change the text color of associated labels to the new color
+        const labels = document.querySelectorAll(`label[for='${input.id}']`);
+        labels.forEach((label) => {
+            label.style.color = newColor;
+        });
+    });
+
+    input.addEventListener("blur", () => {
+        // If there is no text inside the input field, reset border color to default
+        if (!input.value.trim()) {
+            input.style.borderColor = originalColor;
+        }
+    });
 }
+
+
+
+
+
+
+
+
 
 
